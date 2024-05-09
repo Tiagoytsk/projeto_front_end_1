@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <h1 v-if="user">{{ user.username }}</h1>
-    <button class="btn btn-success" v-if="user" @click="logout">Logout</button>
-
-    <div v-else>
+    <div v-if="!isLoggedIn">
       <h1>{{ mode === 'login' ? 'Login' : 'Register' }}</h1>
       <form @submit.prevent="mode === 'login' ? login() : register()">
         <label for="username">Username:</label>
@@ -21,6 +17,9 @@
       <p v-if="loginError" class="error">You are already logged in.</p>
       <p v-if="registerError" class="error">{{ registerError }}</p>
     </div>
+    <div v-else>
+      <h1>Welcome, {{ user.username }}</h1>
+      <button @click="logout" class="btn btn-success">Logout</button>
   </div>
 </template>
 
@@ -51,6 +50,7 @@ import { resolveTypeElements } from 'vue/compiler-sfc';
         username: '',
         password: '',
         user: null,
+        isLoggedIn:false,
         loginError: false,
         mode: 'login',
         auth: getAuth(app),
@@ -58,120 +58,106 @@ import { resolveTypeElements } from 'vue/compiler-sfc';
       };
     },
     created() {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.user = user;
-          console.log("User is logged in with UID: ", user.uid);
-        } else {
-          this.user = null;
-          console.log("No user is logged in");
-        }
-      });
-    },
+  const usercheck = JSON.parse(localStorage.getItem("user"));
+  if (usercheck) {
+    this.isLoggedIn = true;
+    this.user = usercheck;
+    console.log("User is already logged in");
+  } else {
+    this.login();
+  }
+},
+   
     methods: {
+      checkLoginStatusAndLogin() {
+   
+        if (!this.isLoggedIn) {
+      this.login();
+    }
+    },
         toggleMode() {
       this.mode = this.mode === 'login' ? 'register' : 'login';
     },
-      login() {
-        // If a user is already logged in, return immediately
-        if (this.user) {
-
-          console.log("User is already logged in");
-          this.loginError = true;
-          return;
-        }
-  
-        const usersRef = ref(db, 'users');
-        onValue(usersRef, (snapshot) => {
-          const data = snapshot.val();
-          for(let userId in data) {
-            if(data[userId].username === this.username && data[userId].password === this.password) {
-              console.log("User logged in");
-              this.user = data[userId];
-              console.log(this.user);
-              const token = this.login();
-              localStorage.setItem("isLoggedIn", true);
-              localStorage.setItem("user", JSON.stringify(this.user));
-              this.$router.push({
-                username:this.username
-              })
-              return;
-            }
-          }
-          console.log("No user found or incorrect password");
-        });
-      },
-      created() {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.user = user;
-        console.log("User is logged in with UID: ", user.uid);
-        localStorage.setItem("isLoggedIn", true);
-      } else {
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-        if (isLoggedIn) {
-          const userData = localStorage.getItem("user");
-          if (userData) {
-            this.user = JSON.parse(userData);
-            console.log("User is logged in with UID: ", this.user.uid);
-          }
-        } else {
-          this.user = null;
-          console.log("No user is logged in");
-        }
-      }
-    });
-},
-
-      async register() {
+    async login() {
   const usersRef = ref(db, 'users');
-  let userExists = false;
-
-  // Check if the user already exists
   const snapshot = await get(usersRef);
   const data = snapshot.val();
+  
   for(let userId in data) {
-    if(data[userId].username === this.username) {
-      userExists = true;
-      break;
+    if(data[userId].username === this.username && data[userId].password === this.password) {
+      console.log("User logged in with ID: ", userId);
+      this.user = data[userId];
+      console.log(this.user);
+      this.isLoggedIn = true;
+      localStorage.setItem("isLoggedIn", true);
+      localStorage.setItem("user", JSON.stringify(this.user));
+      localStorage.setItem("token", userId);
+      this.$router.push({
+        username:this.username
+      })
+      return;
     }
   }
-
-  if(userExists) {
-    console.log("User already exists");
-    this.registerError = 'A user with this username already exists.'; // Set the register error
-    return;
-  }
-
-  // Create a new user
-  try {
-    const newUserRef = push(usersRef);
-    await set(newUserRef, {
-      username: this.username,
-      password: this.password
-    });
-    console.log("User registered with ID: ", newUserRef.key);
-    this.registerError = ''; // Clear the register error if the registration is successful
-  } catch (error) {
-    console.error("Error adding user: ", error);
-    this.registerError = 'An error occurred while registering.'; // Set the register error
-  }
+  console.log("No user found or incorrect password");
 },
-logout() {
-    const auth = getAuth();
-    signOut(auth).then(() => {
+
+
+  async register() {
+      const usersRef = ref(db, 'users');
+        let userExists = false;
+        const snapshot = await get(usersRef);
+        const data = snapshot.val();
+        for(let userId in data) {
+          if(data[userId].username === this.username) {
+            userExists = true;
+            break;
+          }
+        }
+
+        if(userExists) {
+          console.log("User already exists");
+          this.registerError = 'A user with this username already exists.'; // Set the register error
+          return;
+        }
+
+        // Create a new user
+        try {
+          const newUserRef = push(usersRef);
+          await set(newUserRef, {
+            username: this.username,
+            password: this.password
+          });
+          console.log("User registered with ID: ", newUserRef.key);
+          this.registerError = ''; // Clear the register error if the registration is successful
+        } catch (error) {
+          console.error("Error adding user: ", error);
+          this.registerError = 'An error occurred while registering.'; // Set the register error
+        }
+},
+  logout() {
+    // Clear user session
+    this.user = null;
+    this.isLoggedIn = false;
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+
+    // Redirect to login page
+    this.$router.push({ name: 'Login' });
+  },
+  // Your other methods...
+},
+watch: {
+
+  isLoggedIn: function(newVal, oldVal) {
+    if (!newVal) {
+      // If the user is not logged in, clear the user session
       this.user = null;
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("user");
-      console.log("User logged out");
-    }).catch((error) => {
-      console.error("Error signing out: ", error);
-    });
-  },
     }
   }
+}
+    }
 
   </script>
   

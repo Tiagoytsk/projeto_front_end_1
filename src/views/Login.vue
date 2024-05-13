@@ -128,29 +128,24 @@ import { resolveTypeElements } from 'vue/compiler-sfc';
             password: this.password
           });
           console.log("User registered with ID: ", newUserRef.key);
-          this.registerError = ''; // Clear the register error if the registration is successful
+          this.registerError = '';
         } catch (error) {
           console.error("Error adding user: ", error);
-          this.registerError = 'An error occurred while registering.'; // Set the register error
+          this.registerError = 'An error occurred while registering.';
         }
 },
   logout() {
-    // Clear user session
     this.user = null;
     this.isLoggedIn = false;
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
-
-    // Redirect to login page
     this.$router.push({ name: 'Login' });
   },
-  // Your other methods...
 },
 watch: {
 
   isLoggedIn: function(newVal, oldVal) {
     if (!newVal) {
-      // If the user is not logged in, clear the user session
       this.user = null;
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("user");

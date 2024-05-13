@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Login from '../views/Login.vue'
 import Catalogo from '@/views/Catalogo.vue'
 import HomeView from '@/views/HomeView.vue'
+import Favoritos from '@/views/Favoritos.vue'
 
 const routes = [
   {
@@ -17,7 +18,11 @@ const routes = [
   {
     path: '/Catalogo',
     component: Catalogo,
-  }
+  },
+  {
+    path: '/Favoritos',
+    component: Favoritos,
+  },
 ]
 
 const router = createRouter({

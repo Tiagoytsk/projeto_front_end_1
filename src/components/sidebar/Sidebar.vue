@@ -22,17 +22,25 @@ export default {
     <div class="sidebar" :style="{width: sidebarWidth}">
         <h1>
             <span v-if="collapsed">
-                <div>D</div>
+                <div style="margin-left: 11px;">D</div>
+                <SidebarLink to="/" icon="fas fa-home"></SidebarLink>
+                <SidebarLink to="/catalogo" icon="fas fa-book"></SidebarLink>
+                <SidebarLink to="/favoritos" icon="fas fa-star"></SidebarLink>
+                <SidebarLink to="/login" icon="fas fa-sign-in-alt"></SidebarLink> 
             </span>
-            <span v-else>Dog photos</span>
+            <span v-else>Dog Photos
+              <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
+                <SidebarLink to="/catalogo" icon="fas fa-book">About</SidebarLink>
+                <SidebarLink to="/favoritos" icon="fas fa-star">Favorito</SidebarLink>
+                <SidebarLink to="/login" icon="fas fa-sign-in-alt">login</SidebarLink> 
+              
+            </span>
+
         </h1>
-        <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink to="/catalogo" icon="fas fa-book">About</SidebarLink>
-        <SidebarLink to="/favoritos" icon="fas fa-star">Favorito</SidebarLink>
-        <SidebarLink to="/login" icon="fas fa-sign-in-alt"><h1>ola</h1>login</SidebarLink> 
+        
         
         <span class="collapse-icons" :class="{ 'rotate-180': collapsed }" @click="toggleSidebar">
-            <i class="fas fa-angle-double-left"></i>
+            <i class="fas fa-angle-double-left" :style="{ transform: `rotate(${collapsed ? 180 : 0}deg)` }"></i>
         </span>
 
     </div>
@@ -47,6 +55,9 @@ export default {
 </style>
 
 <style scoped>
+sidebarlink{
+  margin-top: 50px;
+}
 .sidebar{
   color: white;
   background-color: var(--sidebar-bg-color);
@@ -70,10 +81,18 @@ export default {
   color: rgba(255, 255, 255, 0.7);
   transition: 0.2s linear;
 }
+.collapse-icons {
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
 
 .rotate-180{
   transform: rotate(180deg);
-  transition: 0.2s linear;
+
+}
+.fas {
+  transition: transform 0.3s ease-in-out;
 }
 
 </style>

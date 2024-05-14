@@ -80,11 +80,13 @@ export default {
 
   const path = 'users/' + userId;
   console.log('Adding item to path:', path);
+  localStorage.setItem('favorito', item);
 
   const userRef = ref(this.db, path);
-  const itemObject = { favorito: item }; // Update the 'favorito' field with the new item
+  const itemObject = { favorito: item };
   update(userRef, itemObject).then(() => {
     console.log('Item added to favorites');
+    localStorage.setItem('favorito', item);
   }).catch((error) => {
     console.error('Error adding item to favorites:', error);
   });

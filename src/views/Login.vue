@@ -91,6 +91,9 @@ import { resolveTypeElements } from 'vue/compiler-sfc';
       this.isLoggedIn = true;
       localStorage.setItem("isLoggedIn", true);
       localStorage.setItem("user", JSON.stringify(this.user));
+      const user = JSON.parse(localStorage.getItem('user'));
+      const favorito = user ? user.favorito : null;
+      localStorage.setItem('favorito', favorito)
       localStorage.setItem("token", userId);
       this.$router.push({
         username:this.username
@@ -139,6 +142,7 @@ import { resolveTypeElements } from 'vue/compiler-sfc';
     this.isLoggedIn = false;
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+    localStorage.removeItem('token')
     this.$router.push({ name: 'Login' });
   },
 },

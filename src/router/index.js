@@ -18,10 +18,14 @@ const routes = [
   {
     path: '/Catalogo',
     component: Catalogo,
+    meta: { requiresAuth: true } 
+
   },
   {
     path: '/Favoritos',
     component: Favoritos,
+    meta: { requiresAuth: true } 
+
   },
 ]
 
@@ -30,6 +34,22 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!user) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})
 
 
 export default router

@@ -9,16 +9,20 @@
       <div class="row g-0">
         <div v-for="(item, index) in resultados" :key="index">
           <img :src="item" alt="Dog image" class="col-md-7">
-          <button :disabled="!user" @click="addToFavorites(item)">Add to Favorites</button>
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{ pesquisa }}</h5>
-          </div>
+          <button class="btn btn-success" style="margin: 20px;" :disabled="!user" @click="addToFavorites(item)">Add to Favorites</button>
         </div>
       </div>
     </div>
   </div>
+  <footer class="footer-basic" style="align-items: flex-end; ">
+      <div class="social">
+        <a href="#"><i class="icon ion-social-instagram"></i></a>
+        <a href="#"><i class="icon ion-social-snapchat"></i></a>
+        <a href="#"><i class="icon ion-social-twitter"></i></a>
+        <a href="#"><i class="icon ion-social-facebook"></i></a>
+      </div>
+      <p class="copyright">Tiago Pedra © 2024</p>
+    </footer>
 </template>
 
 <script>

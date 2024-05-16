@@ -21,6 +21,15 @@
       <h1>Welcome, {{ user.username }}</h1>
       <button @click="logout" class="btn btn-success">Logout</button>
   </div>
+  <footer class="footer-basic" style="align-items: flex-end; ">
+      <div class="social">
+        <a href="#"><i class="icon ion-social-instagram"></i></a>
+        <a href="#"><i class="icon ion-social-snapchat"></i></a>
+        <a href="#"><i class="icon ion-social-twitter"></i></a>
+        <a href="#"><i class="icon ion-social-facebook"></i></a>
+      </div>
+      <p class="copyright">Tiago Pedra © 2024</p>
+    </footer>
 </template>
 
   
@@ -28,7 +37,7 @@
   import { initializeApp, getApps } from 'firebase/app';
   import { getDatabase,get, ref, push, set, onValue } from 'firebase/database';
   import { getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged, signOut ,createUserWithEmailAndPassword } from 'firebase/auth';
-import { resolveTypeElements } from 'vue/compiler-sfc';
+  import { resolveTypeElements } from 'vue/compiler-sfc';
   
   const firebaseConfig = {
     apiKey: "AIzaSyCfqU_Yea8s8pXAqXmY9dURzn2ZPvRRWPY",

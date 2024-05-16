@@ -12,6 +12,15 @@
       <p>Na aba dos favoritos voce encontra a foto que voce escolheu como foto favorita.</p>
       <p>Para ter acesso a estas funcionalidades e facil basta ir a aba do login e se nao for resgistado criar uma nova conta. Se ja tiver e so dar login e ja esta tudo a postos para disfrutar das suas fotos de caes.</p>
     </div>
+    <footer class="footer-basic" style="align-items: flex-end; ">
+      <div class="social">
+        <a href="#"><i class="icon ion-social-instagram"></i></a>
+        <a href="#"><i class="icon ion-social-snapchat"></i></a>
+        <a href="#"><i class="icon ion-social-twitter"></i></a>
+        <a href="#"><i class="icon ion-social-facebook"></i></a>
+      </div>
+      <p class="copyright">Tiago Pedra © 2024</p>
+    </footer>
   </template>
   
   <script>
@@ -48,9 +57,20 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100%;
 }
 
 .t1 {
   text-align: center;
+}
+.footer-basic {
+  position: relative; /* Add this line */
+  left: 0;
+  bottom: 0; /* Add this line */
+  width: 100%;
+  padding: 40px;
+  background-color: #000000;
+  color: #4b4c4d;
+  box-sizing: border-box;
 }
 </style>
